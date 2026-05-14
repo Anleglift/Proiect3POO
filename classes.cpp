@@ -467,6 +467,54 @@ std::ostream &operator<<(std::ostream &out, const AdresaWeb &A)
 
 // CLASA DERIVATA: Vizita
 
+StrategieRecomandare::~StrategieRecomandare()
+{
+}
+
+int StrategieRecomandareStandard::CalculeazaScor(const AdresaWeb &adresa,
+                                                 int clicuri,
+                                                 int numarAccesari) const
+{
+    const int scorAdresa = adresa.CalculeazaRelevanta();
+
+    return static_cast<int>(
+        0.50 * clicuri +
+        0.30 * scorAdresa +
+        0.20 * numarAccesari);
+}
+
+std::string StrategieRecomandareStandard::getNumeStrategie() const
+{
+    return "Strategie standard";
+}
+
+int StrategieRecomandareSiguranta::CalculeazaScor(const AdresaWeb &adresa,
+                                                  int clicuri,
+                                                  int numarAccesari) const
+{
+    int scor = clicuri;
+
+    if (adresa.getProtocol() == "https")
+    {
+        scor += 40;
+    }
+
+    if (adresa.getSigur())
+    {
+        scor += 30;
+    }
+
+    scor += adresa.CalculeazaRelevanta() / 2;
+    scor += numarAccesari * 5;
+
+    return scor;
+}
+
+std::string StrategieRecomandareSiguranta::getNumeStrategie() const
+{
+    return "Strategie bazata pe siguranta";
+}
+
 int Vizita::contor = 0;
 
 Vizita::Vizita()
@@ -639,28 +687,24 @@ Vizita Vizita::CuratareVizite(const Vizita &vizitaCurenta)
     return Vizita(adreseUnice, dateUnice, clicuriUnice);
 }
 
-void Vizita::RecomandareSite()
+void Vizita::RecomandareSite(const StrategieRecomandare &strategie)
 {
     for (int i = 0; i < getDimensiune(); i++)
     {
-        const int scorAdresa = adrese[i].CalculeazaRelevanta();
-        int numarDate = 1;
+        int numarAccesari = 1;
 
-        // Datele combinate sunt separate prin '/'. Pastram logica originala.
         for (char caracter : date[i])
         {
             if (caracter == '/')
             {
-                numarDate++;
+                numarAccesari++;
             }
         }
 
-        const int scor = static_cast<int>(
-            0.50 * clicuri[i] +
-            0.30 * scorAdresa +
-            0.20 * numarDate);
-
-        clicuri[i] = scor;
+        clicuri[i] = strategie.CalculeazaScor(
+            adrese[i],
+            clicuri[i],
+            numarAccesari);
     }
 }
 

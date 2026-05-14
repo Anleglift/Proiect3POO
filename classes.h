@@ -57,6 +57,9 @@ public:
 
     static int getContor();
 
+    /// DESIGN PATTERN 1: Template Method
+    /// Metodele publice non-virtuale definesc interfata generala,
+    /// iar pasii concreti sunt implementati de clasele derivate.
     /// Interfete non-virtuale care apeleaza functii virtuale.
     int Relevanta() const;
     void NormalizeazaResursa();
@@ -149,6 +152,41 @@ public:
 
 std::ostream &operator<<(std::ostream &out, const AdresaWeb &A);
 
+/// DESIGN PATTERN: Strategy
+/// Permite schimbarea algoritmului de recomandare fara modificarea clasei Vizita.
+
+class StrategieRecomandare
+{
+public:
+    virtual ~StrategieRecomandare();
+
+    virtual int CalculeazaScor(const AdresaWeb &adresa,
+                               int clicuri,
+                               int numarAccesari) const = 0;
+
+    virtual std::string getNumeStrategie() const = 0;
+};
+
+class StrategieRecomandareStandard : public StrategieRecomandare
+{
+public:
+    int CalculeazaScor(const AdresaWeb &adresa,
+                       int clicuri,
+                       int numarAccesari) const override;
+
+    std::string getNumeStrategie() const override;
+};
+
+class StrategieRecomandareSiguranta : public StrategieRecomandare
+{
+public:
+    int CalculeazaScor(const AdresaWeb &adresa,
+                       int clicuri,
+                       int numarAccesari) const override;
+
+    std::string getNumeStrategie() const override;
+};
+
 /// CLASA DERIVATA: Vizita
 
 class Vizita : public ResursaInternet
@@ -187,7 +225,7 @@ public:
     void ModificareVizita(const AdresaWeb &adresa, const std::string &data, int clicuri, int index);
 
     Vizita CuratareVizite(const Vizita &vizitaCurenta);
-    void RecomandareSite();
+    void RecomandareSite(const StrategieRecomandare &strategie);
     void ValidareVizite();
 
     int CalculeazaRelevanta() const override;
@@ -268,4 +306,80 @@ public:
     void Afisare(std::ostream &out) const;
 };
 
+/// TEMPLATE CLASAMENT
+
 std::ostream &operator<<(std::ostream &out, const ColectieResurse &C);
+
+template <typename ElementType>
+class Clasament
+{
+private:
+    std::vector<ElementType> elemente;
+    std::vector<int> scoruri;
+
+public:
+    void AdaugaElement(const ElementType &element, int scor)
+    {
+        elemente.push_back(element);
+        scoruri.push_back(scor);
+    }
+
+    int getDimensiune() const
+    {
+        return static_cast<int>(elemente.size());
+    }
+
+    const ElementType &getElement(int index) const
+    {
+        if (index < 0 || index >= getDimensiune())
+        {
+            throw InternetException("index invalid in Clasament");
+        }
+
+        return elemente[index];
+    }
+
+    int getScor(int index) const
+    {
+        if (index < 0 || index >= getDimensiune())
+        {
+            throw InternetException("index invalid in Clasament");
+        }
+
+        return scoruri[index];
+    }
+
+    void SorteazaDescrescator()
+    {
+        for (int i = 0; i < getDimensiune() - 1; i++)
+        {
+            for (int j = i + 1; j < getDimensiune(); j++)
+            {
+                if (scoruri[i] < scoruri[j])
+                {
+                    std::swap(scoruri[i], scoruri[j]);
+                    std::swap(elemente[i], elemente[j]);
+                }
+            }
+        }
+    }
+
+    void Afiseaza(std::ostream &out, int limita) const
+    {
+        int maxim = getDimensiune();
+
+        if (limita < maxim)
+        {
+            maxim = limita;
+        }
+
+        for (int i = 0; i < maxim; i++)
+        {
+            out << i + 1 << ". "
+                << elemente[i]
+                << " | scor: "
+                << scoruri[i]
+                << std::endl;
+        }
+    }
+};
