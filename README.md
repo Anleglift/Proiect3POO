@@ -332,3 +332,9 @@ Contorii statici ai claselor completează demonstrația, deoarece arată existen
 Există și aspecte care pot fi îmbunătățite. Variabila globală `fin` ar putea fi înlocuită cu un flux local în `main`, transmis prin referință funcției de citire. Metoda `CuratareVizite(const Vizita&)` ar putea deveni `CuratareVizite() const`. De asemenea, sortarea manuală din `Clasament` ar putea fi înlocuită complet cu `std::sort`. O altă posibilă îmbunătățire ar fi introducerea unor structuri suplimentare pentru reprezentarea datelor calendaristice sau pentru serializarea informațiilor într-un fișier de ieșire, într-un mod clar și ușor de citit pentru utilizator.
 
 În concluzie, proiectul realizează o implementare a unui sistem de contorizare si monitorizare a vizitelor web ale unui utilizator oarecare, care oferă informații importante în legătură cu obiceiurile sale de navigare, precum și recomandări relevante. De asemenea, proiectul include moștenire, polimorfism, clasă abstractă, funcții virtuale pure, clonare polimorfică, STL, smart pointers, excepții proprii, citirea datelor dintr-un fișier de intrare, clasă template și două design pattern-uri. 
+
+## Bibliografe
+
+- Curs
+- Github
+- https://refactoring.guru/design-patterns
