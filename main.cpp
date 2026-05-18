@@ -30,7 +30,7 @@ std::ifstream fin("sites.in");
 /// - Design Pattern 2: Strategy pentru recomandarea site-urilor.
 ///   Clasa Vizita foloseste o StrategieRecomandare pentru a calcula scorul de recomandare.
 ///
-/// - Clasa template: Clasament<T>.
+/// - Clasa template: Clasament<ElementType>.
 ///   Este folosita pentru Clasament<AdresaWeb> si Clasament<Domeniu>.
 
 void AfiseazaTitluSectiune(const std::string &titlu)
@@ -108,7 +108,7 @@ Clasament<AdresaWeb> CalculeazaClasamentAdrese(const Vizita &vizita)
 /// Testeaza mecanismul de recomandare si afiseaza topul adreselor web.
 void TesteazaRecomandareSiteuri(Vizita &vizita)
 {
-    StrategieRecomandareSiguranta strategie;
+    StrategieRecomandareStandard strategie;
 
     std::cout << "Strategie folosita: "
               << strategie.getNumeStrategie()
